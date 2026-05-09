@@ -5,7 +5,6 @@ public class 조이스틱 {
         int count = 0;
         int length = name.length();
         int move = length-1;
-t
         for(int i =0; i<length; i++){
             char ch = name.charAt(i);
             count += Math.min(ch - 'A', 'Z' - ch +1);
