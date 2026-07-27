@@ -44,4 +44,52 @@ public class 섬_연결하기 {
         }
         return costSum;
     }
+
+    import java.util.*;
+
+    class Solution {
+        int[] parent;
+        public int solution(int n, int[][] costs) {
+            Arrays.sort(costs, (a,b) -> a[2] - b[2]);
+            parent = new int[n];
+
+            for(int i =0; i<n; i++) parent[i] = i;
+
+            int totalCost = 0;
+            int visitedNode = 0;
+
+            for(int[] c : costs){
+                int start = c[0];
+                int end = c[1];
+                int cost = c[2];
+
+                if(union(start, end)){
+                    totalCost += cost;
+                    visitedNode++;
+                }
+
+                if(visitedNode == n-1) return totalCost;
+            }
+
+            return -1;
+
+        }
+
+        private int find(int node){
+            if(parent[node] == node) return node;
+
+            return find(parent[node]);
+        }
+
+        private boolean union(int node1, int node2){
+            int root1 = find(node1);
+            int root2 = find(node2);
+
+            if(root1 == root2) return false;
+
+            parent[root1] = root2;
+
+            return true;
+        }
+    }
 }
