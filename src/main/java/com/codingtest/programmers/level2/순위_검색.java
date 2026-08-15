@@ -50,4 +50,60 @@ public class 순위_검색 {
         dfs(words, current + words[depth], depth+1);
         dfs(words, current + "-", depth+1);
     }
+
+    import java.util.*;
+
+    class Solution {
+        Map<String, List<Integer>> map = new HashMap<>();
+        String[] arr;
+        public int[] solution(String[] info, String[] query) {
+
+            for(String i : info){
+                arr = i.split(" ");
+                dfs("", 0);
+            }
+
+            int idx = 0;
+            int[] answer = new int[query.length];
+
+            for(List<Integer> list : map.values()) Collections.sort(list, (a,b) -> a-b);
+
+            for(String q : query){
+                String[] arr = q.split(" ");
+                List<Integer> list =
+                        map.computeIfAbsent(arr[0] + arr[2] + arr[4] + arr[6], k -> new ArrayList<>());
+                if(list.isEmpty()) {
+                    answer[idx++] = 0;
+                    continue;
+                }
+
+                int target = Integer.parseInt(arr[7]);
+                int left = 0;
+                int right = list.size();
+
+                while(left < right){
+                    int mid = (right + left) /2;
+
+                    int midNum = list.get(mid);
+                    if(midNum < target) left = mid +1;
+                    else right = mid;
+                }
+
+                answer[idx++] = list.size() - left;
+            }
+
+            return answer;
+
+        }
+
+        private void dfs(String current, int depth){
+            if(depth >=4){
+                map.computeIfAbsent(current, k -> new ArrayList<>()).add(Integer.parseInt(arr[4]));
+                return ;
+            }
+            dfs(current+ arr[depth], depth+1);
+            dfs(current+ "-", depth+1);
+
+        }
+    }
 }
