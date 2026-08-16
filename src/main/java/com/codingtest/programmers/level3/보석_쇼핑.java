@@ -37,4 +37,42 @@ public class 보석_쇼핑 {
         return answer;
 
     }
+    import java.util.*;
+
+    class Solution {
+        public int[] solution(String[] gems) {
+            Set<String> gemSet = new HashSet<>(List.of(gems));
+            Map<String, Integer> map = new HashMap<>();
+
+            int kindCount = gemSet.size();
+
+            int left = 0;
+            int right = gems.length-1;
+            int answerLeft = 0;
+            int len = gems.length;
+
+            for(int i = 0; i<gems.length; i++){
+                map.put(gems[i], map.getOrDefault(gems[i], 0) + 1);
+
+                while(map.size() == kindCount){
+                    int currentLen = i - left;
+
+                    if(currentLen < len){
+                        right = i;
+                        len = currentLen;
+                        answerLeft = left;
+                    }
+
+                    int leftCount = map.get(gems[left]);
+
+                    if(leftCount == 1) map.remove(gems[left]);
+                    else map.put(gems[left], leftCount-1);
+
+                    left++;
+                }
+            }
+
+            return new int[]{answerLeft + 1, right + 1};
+        }
+    }
 }
