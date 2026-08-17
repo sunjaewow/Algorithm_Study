@@ -58,4 +58,70 @@ public class 불량_사용자 {
             list.remove(users);
         }
     }
+
+
+    import java.util.*;
+
+    class Solution {
+        boolean[] visited;
+        String[] banned_id;
+        int n;
+        Map<String, Integer> userMap = new HashMap<>();
+        Map<String, Set<String>> banCandidateMap = new HashMap<>();
+        Set<Set<String>> result = new HashSet<>();
+        Set<String> selected = new HashSet<>();
+
+        public int solution(String[] user_id, String[] banned_id) {
+            this.banned_id = banned_id;
+            n = banned_id.length;
+            visited = new boolean[user_id.length];
+
+            for(int i = 0; i<user_id.length; i++){
+                userMap.put(user_id[i], i);
+            }
+
+            for(String b : banned_id){
+                int banLen = b.length();
+                for(String u : user_id){
+                    int userLen = u.length();
+                    if(userLen != banLen) continue;
+
+                    boolean isCandidate = true;
+
+                    for(int i =0; i<banLen; i++){
+                        char banChar = b.charAt(i);
+                        char userChar = u.charAt(i);
+                        if(banChar == '*') continue;
+                        if(banChar != userChar){
+                            isCandidate = false;
+                            break;
+                        }
+                    }
+                    if(isCandidate) banCandidateMap.computeIfAbsent(b, k -> new HashSet<>()).add(u);
+                }
+            }
+
+            dfs(0);
+            return result.size();
+        }
+
+        private void dfs(int depth){
+            if(depth == n){
+                result.add(new HashSet<>(selected));
+                return ;
+            }
+
+            for(String candidate : banCandidateMap.get(banned_id[depth])){
+                int idx = userMap.get(candidate);
+                if(visited[idx]) continue;
+                selected.add(candidate);
+                visited[idx] = true;
+
+                dfs(depth+1);
+
+                selected.remove(candidate);
+                visited[idx] = false;
+            }
+        }
+    }
 }
